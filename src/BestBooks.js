@@ -65,15 +65,10 @@ class MyFavoriteBooks extends React.Component {
     // })
   }
 
-// ---------------
 
 
-deleteCatHandler = () =>{
 
-  this.props.deleteCatFunc(this.props.Books._id)
-}
 
-  
 
   render() {
     return (
@@ -96,9 +91,6 @@ deleteCatHandler = () =>{
           addBookFun={this.addBook}
 
         />
-
-
-
         {this.state.Books.length > 0 && this.state.Books.map((ele, index) => {
 
           return (
@@ -109,8 +101,7 @@ deleteCatHandler = () =>{
                 <Card.Title>{ele.title} </Card.Title>
                 <Card.Text> {ele.description}  </Card.Text>
                 <Card.Text>{ele.email}</Card.Text>
-                <button onClick={this.deleteCatHandler}>X</button>
-
+                <button>X</button>
               </Card.Body>
 
             </Card>
