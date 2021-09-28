@@ -15,6 +15,11 @@ import Profile from './Profile';
 
 class App extends React.Component {
 
+
+
+
+
+
   render() {
 
     const { isAuthenticated } = this.props.auth0;

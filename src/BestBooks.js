@@ -5,6 +5,7 @@ import './BestBooks.css';
 import axios from 'axios';
 import { withAuth0 } from '@auth0/auth0-react';
 import Jumbotron from 'react-bootstrap/Jumbotron';
+import FindBook from './FindBook';
 
 class MyFavoriteBooks extends React.Component {
 
@@ -12,6 +13,7 @@ class MyFavoriteBooks extends React.Component {
     super(props);
     this.state = {
       Books: [],
+      ownerNamee: ' '
     }
   }
 
@@ -21,19 +23,62 @@ class MyFavoriteBooks extends React.Component {
     let email1 = this.props.auth0.user.email
     let BooksData = await axios.get(`${process.env.REACT_APP_SERVER}/getbooksOwner?email=${email1}`)
 
-    console.log(('wewew'),BooksData.data);
+    console.log(('wewew'), BooksData.data);
     this.setState({
-      Books: BooksData.data
+      Books: BooksData.data,
 
     })
     console.log(email1);
     console.log('aaaaaaaaaa', this.state.books)
   }
 
+
+
+  addBook = async (e) => {
+    e.preventDefault()
+    console.log('addCatFun');
+
+    // firstway
+    let bookTitle = e.target.bookTitle.value
+    let bookDescription = e.target.bookDescription.value
+    let ownerName = this.props.auth0.user.email
+
+    let newBooksData = await axios.get(`${process.env.REACT_APP_SERVER}/addBook?ownerName1=${ownerName}&bookTitle1=${bookTitle}&bookDescription1=${bookDescription}`)
+
+    // when you use post it will be like this secondway 
+
+    // let bookFormInfo ={
+
+    //    bookTitle : e.target.bookTitle.value,
+    //    bookDescription :e.target.bookDescription.value,
+    //    ownerName : this.props.auth0.user.email
+
+
+    // }
+
+    // let newBooksData = await axios.post(`${process.env.REACT_APP_SERVER}/addBook`,bookFormInfo)
+
+    // -----------------------
+    // this.setState({
+
+    //   Books : newBooksData.data
+    // })
+  }
+
+// ---------------
+
+
+deleteCatHandler = () =>{
+
+  this.props.deleteCatFunc(this.props.Books._id)
+}
+
+  
+
   render() {
     return (
 
-  <>
+      <>
 
         <Jumbotron>
 
@@ -45,7 +90,16 @@ class MyFavoriteBooks extends React.Component {
 
         </Jumbotron>
 
-        {this.state.Books.length > 0 && this.state.Books.map((ele,index) => {
+
+        <FindBook
+
+          addBookFun={this.addBook}
+
+        />
+
+
+
+        {this.state.Books.length > 0 && this.state.Books.map((ele, index) => {
 
           return (
 
@@ -55,6 +109,7 @@ class MyFavoriteBooks extends React.Component {
                 <Card.Title>{ele.title} </Card.Title>
                 <Card.Text> {ele.description}  </Card.Text>
                 <Card.Text>{ele.email}</Card.Text>
+                <button onClick={this.deleteCatHandler}>X</button>
 
               </Card.Body>
 
@@ -62,7 +117,7 @@ class MyFavoriteBooks extends React.Component {
           )
         })
         }
-       </>
+      </>
 
     )
   }

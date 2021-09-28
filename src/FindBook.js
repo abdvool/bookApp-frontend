@@ -1,3 +1,126 @@
+import React, { Component } from 'react'
+
+export class FindBook extends Component {
+    render() {
+        return (
+            <div>
+
+
+
+                <form  onSubmit={this.props.addBookFun}>
+                    <input type="text" name='bookTitle' placeholder='enter book' />
+                    <input type="text" name='bookDescription' placeholder='enter book description' />
+                    <input type="submit" value="get books" />
+
+                </form>
+
+
+
+
+            </div>
+        )
+    }
+}
+
+export default FindBook
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // import axios from 'axios';
 // import React from 'react'
 // import { withAuth0 } from '@auth0/auth0-react';
