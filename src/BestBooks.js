@@ -27,6 +27,7 @@ class MyFavoriteBooks extends React.Component {
     this.setState({
       Books: BooksData.data,
 
+
     })
     console.log(email1);
     console.log('aaaaaaaaaa', this.state.books)
@@ -43,7 +44,9 @@ class MyFavoriteBooks extends React.Component {
     let bookDescription = e.target.bookDescription.value
     let ownerName = this.props.auth0.user.email
 
+
     let newBooksData = await axios.get(`${process.env.REACT_APP_SERVER}/addBook?ownerName1=${ownerName}&bookTitle1=${bookTitle}&bookDescription1=${bookDescription}`)
+    console.log(newBooksData.data);
 
     // when you use post it will be like this secondway 
 
@@ -59,10 +62,32 @@ class MyFavoriteBooks extends React.Component {
     // let newBooksData = await axios.post(`${process.env.REACT_APP_SERVER}/addBook`,bookFormInfo)
 
     // -----------------------
-    // this.setState({
+    await this.setState({
 
-    //   Books : newBooksData.data
-    // })
+      Books: newBooksData.data
+    })
+  }
+// ---------------------
+
+   deleteBooks = async (ele) => {
+
+ 
+
+  let id = ele._id
+  let email = this.props.auth0.user.email
+
+  console.log(id);
+  let deleteBooksData =  await axios.get(`${process.env.REACT_APP_SERVER}/deleteBooks?bookId=${id}&email=${email}`)
+
+
+ console.log(deleteBooksData.data);
+  await this.setState({
+
+
+    Books : deleteBooksData.data
+  })
+// console.log(this.state.Books);
+
   }
 
 
@@ -70,48 +95,53 @@ class MyFavoriteBooks extends React.Component {
 
 
 
-  render() {
-    return (
-
-      <>
-
-        <Jumbotron>
-
-          <h1>My Favorite Books</h1>
-
-          <p>
-            This is a collection of my favorite books
-          </p>
-
-        </Jumbotron>
 
 
-        <FindBook
+render() {
+  return (
 
-          addBookFun={this.addBook}
+    <>
 
-        />
-        {this.state.Books.length > 0 && this.state.Books.map((ele, index) => {
+      <Jumbotron>
 
-          return (
+        <h1>My Favorite Books</h1>
 
-            <Card key={index} style={{ width: '18rem' }}>
+        <p>
+          This is a collection of my favorite books
+        </p>
 
-              <Card.Body>
-                <Card.Title>{ele.title} </Card.Title>
-                <Card.Text> {ele.description}  </Card.Text>
-                <Card.Text>{ele.email}</Card.Text>
-                <button>X</button>
-              </Card.Body>
+      </Jumbotron>
 
-            </Card>
-          )
-        })
-        }
-      </>
 
-    )
-  }
+      <FindBook
+
+        addBookFun={this.addBook}
+
+      />
+      {this.state.Books.length > 0 && this.state.Books.map((ele, index) => {
+
+        return (
+
+          <Card key={index} style={{ width: '18rem' }}>
+
+            <Card.Body>
+              <Card.Title>{ele.title} </Card.Title>
+              <Card.Text> {ele.description}  </Card.Text>
+              <Card.Text>{ele.email}</Card.Text>
+              <button onClick={()=> this.deleteBooks(ele)}>  X  </button>
+              
+
+
+            </Card.Body>
+
+          </Card>
+        )
+      })
+      }
+    </>
+
+  )
+}
 }
 
 export default withAuth0(MyFavoriteBooks);

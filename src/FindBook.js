@@ -10,7 +10,7 @@ export class FindBook extends Component {
                 <form  onSubmit={this.props.addBookFun}>
                     <input type="text" name='bookTitle' placeholder='enter book' />
                     <input type="text" name='bookDescription' placeholder='enter book description' />
-                    <input type="submit" value="get books" />
+                    <input type="submit" value="Add book" />
 
                 </form>
 
