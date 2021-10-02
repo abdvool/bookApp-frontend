@@ -6,6 +6,7 @@ import axios from 'axios';
 import { withAuth0 } from '@auth0/auth0-react';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import FindBook from './FindBook';
+import UpdateBookForm from './UpdateBookForm';
 
 class MyFavoriteBooks extends React.Component {
 
@@ -13,7 +14,10 @@ class MyFavoriteBooks extends React.Component {
     super(props);
     this.state = {
       Books: [],
-      ownerNamee: ' '
+      ownerNamee: ' ',
+      show: false,
+
+      selectedElement:{},
     }
   }
 
@@ -67,81 +71,144 @@ class MyFavoriteBooks extends React.Component {
       Books: newBooksData.data
     })
   }
-// ---------------------
+  // ---------------------
 
-   deleteBooks = async (ele) => {
-
- 
-
-  let id = ele._id
-  let email = this.props.auth0.user.email
-
-  console.log(id);
-  let deleteBooksData =  await axios.get(`${process.env.REACT_APP_SERVER}/deleteBooks?bookId=${id}&email=${email}`)
+  deleteBooks = async (ele) => {
 
 
- console.log(deleteBooksData.data);
-  await this.setState({
+
+    let id = ele._id
+    let email = this.props.auth0.user.email
+
+    console.log(id);
+    let deleteBooksData = await axios.get(`${process.env.REACT_APP_SERVER}/deleteBooks?bookId=${id}&email=${email}`)
 
 
-    Books : deleteBooksData.data
-  })
-// console.log(this.state.Books);
+    console.log(deleteBooksData.data);
+    await this.setState({
+
+
+      Books: deleteBooksData.data
+    })
+    // console.log(this.state.Books);
+
+  }
+  // ---------------------------
+
+  updateBook = async (ele) => {
+console.log(ele);
+
+    let email = this.props.auth0.user.email
+
+    let upData = await axios.put(`${process.env.REACT_APP_SERVER}/update/${ele._id}?email=${email}`, ele)
+
+    
+    this.setState({
+
+      Books: upData.data,
+
+
+    })
 
   }
 
+  // ------------------------
+
+  showModal = async (ele) => {
 
 
+    this.setState({
+
+      show:true,
+      selectedElement:ele
+    })
 
 
+  }
+// -----------------
+
+handleClose = () =>{
 
 
+  
+  this.setState({
 
-render() {
-  return (
-
-    <>
-
-      <Jumbotron>
-
-        <h1>My Favorite Books</h1>
-
-        <p>
-          This is a collection of my favorite books
-        </p>
-
-      </Jumbotron>
-
-
-      <FindBook
-
-        addBookFun={this.addBook}
-
-      />
-      {this.state.Books.length > 0 && this.state.Books.map((ele, index) => {
-
-        return (
-
-          <Card key={index} style={{ width: '18rem' }}>
-
-            <Card.Body>
-              <Card.Title>{ele.title} </Card.Title>
-              <Card.Text> {ele.description}  </Card.Text>
-              <Card.Text>{ele.email}</Card.Text>
-              <button onClick={()=> this.deleteBooks(ele)}>  X  </button>
-              
-
-
-            </Card.Body>
-
-          </Card>
-        )
-      })
-      }
-    </>
-
-  )
+    show:false,
+  })
 }
+
+
+
+
+
+
+
+
+
+  render() {
+    return (
+
+      <>
+
+        <Jumbotron>
+
+          <h1>My Favorite Books</h1>
+
+          <p>
+            This is a collection of my favorite books
+          </p>
+
+        </Jumbotron>
+
+
+        <FindBook
+
+          addBookFun={this.addBook}
+
+        />
+        {this.state.Books.length > 0 && this.state.Books.map((ele, index) => {
+
+          return (
+
+            <Card key={index} style={{ width: '18rem' }}>
+
+              <Card.Body>
+                <Card.Title>{ele.title} </Card.Title>
+                <Card.Text> {ele.description}  </Card.Text>
+                <Card.Text>{ele.email}</Card.Text>
+                <button onClick={() => this.deleteBooks(ele)}>  X  </button>
+                <button onClick={() => this.showModal(ele)} >  Update  </button>
+
+
+
+              </Card.Body>
+
+            </Card>
+
+
+
+          )
+        })
+        }
+
+
+<UpdateBookForm 
+updateBook={this.updateBook}
+show={this.state.show}
+handleClose={this.handleClose}
+selectedElement={this.state.selectedElement}
+/>
+
+
+
+
+
+
+
+      </>
+
+    )
+  }
 }
 
 export default withAuth0(MyFavoriteBooks);
